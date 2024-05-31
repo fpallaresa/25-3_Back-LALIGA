@@ -1,9 +1,7 @@
-import { mongoConnect } from "../src/domain/repositories/mongo-repository";
-import mongoose from "mongoose";
-import { appInstance } from "../src/index";
 import request from "supertest";
 import { IUserCreate, User, ROL } from "../src/domain/entities/user.entity";
 import { app } from "../src/server";
+import { appInstance } from "../src";
 
 describe("User controller", () => {
   const adminUserMock: IUserCreate = {
@@ -39,7 +37,6 @@ describe("User controller", () => {
   let createdUserId: string;
 
   beforeAll(async () => {
-    await mongoConnect();
     await User.collection.drop();
     await new User(adminUserMock).save();
     await new User(delegateUserMock).save();
@@ -48,8 +45,7 @@ describe("User controller", () => {
   });
 
   afterAll(async () => {
-    await mongoose.connection.close();
-    appInstance.close();
+   appInstance.close();
   });
 
   it("POST /user/login", async () => {
