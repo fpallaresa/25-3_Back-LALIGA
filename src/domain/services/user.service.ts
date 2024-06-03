@@ -60,12 +60,6 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Only for admins
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para hacer esto" });
-      return;
-    }
-
     const createdUser = await userOdm.createUser(req.body);
     res.status(201).json(createdUser);
   } catch (error) {
