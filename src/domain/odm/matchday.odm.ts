@@ -1,18 +1,8 @@
 import { Matchday, IMatchday } from "../entities/matchday.entity";
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
-const getAllMatchdays = async (page: number, limit: number, filter?: string, value?: string): Promise<IMatchday[]> => {
-  const query: any = {};
-
-  if (filter && value) {
-    if (filter === "team") {
-      query["$or"] = [{ "matches.homeTeam": value }, { "matches.awayTeam": value }];
-    }
-  }
-
-  console.log("Query:", query);
-
-  return await Matchday.find(query)
+const getAllMatchdays = async (page: number, limit: number): Promise<IMatchday[]> => {
+  return await Matchday.find()
     .limit(limit)
     .skip((page - 1) * limit)
     .populate({
@@ -25,15 +15,7 @@ const getAllMatchdays = async (page: number, limit: number, filter?: string, val
 };
 
 const getMatchdayCount = async (filter?: string, value?: string): Promise<number> => {
-  const query: any = {};
-
-  if (filter && value) {
-    if (filter === "team") {
-      query["$or"] = [{ "matches.homeTeam": value }, { "matches.awayTeam": value }];
-    }
-  }
-
-  return await Matchday.countDocuments(query);
+  return await Matchday.countDocuments();
 };
 
 const getMatchdayById = async (id: string): Promise<Document<IMatchday> | any> => {
