@@ -5,10 +5,11 @@ export const getMatchdays = async (req: Request, res: Response, next: NextFuncti
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+    const team = req.query.team as string | undefined;
 
-    const matchdays = await matchdayOdm.getAllMatchdays(page, limit);
+    const matchdays = await matchdayOdm.getAllMatchdays(page, limit, "team", team);
 
-    const totalElements = await matchdayOdm.getMatchdayCount();
+    const totalElements = await matchdayOdm.getMatchdayCount("team", team);
 
     const response = {
       totalItems: totalElements,

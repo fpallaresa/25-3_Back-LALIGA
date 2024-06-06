@@ -37,8 +37,8 @@ export const getTeamById = async (req: Request, res: Response, next: NextFunctio
   try {
     const teamIdToShow = req.params.id;
 
-    // Only for admins and delegates
-    if (req.user.rol !== "ADMIN" && req.user.rol !== "DELEGATE") {
+    // AllUsers with rol
+    if (!req.user.rol) {
       res.status(401).json({ error: "No tienes autorización para hacer esto" });
       return;
     }
@@ -101,7 +101,7 @@ export const deleteTeam = async (req: Request, res: Response, next: NextFunction
 export const updateTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Only for admins
-    if (req.user.rol !== "ADMIN") {
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "DELEGATE") {
       res.status(401).json({ error: "No tienes autorización para hacer esto" });
       return;
     }

@@ -7,8 +7,8 @@ import fs from "fs";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Only for admins
-    if (req.user.rol !== "ADMIN") {
+    // Only for admins and Delegates
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "DELEGATE") {
       res.status(401).json({ error: "No tienes autorización para hacer esto" });
       return;
     }
@@ -70,7 +70,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Only for admins
-    if (req.user.rol !== "ADMIN") {
+    if (req.user.rol !== "ADMIN" ) {
       res.status(401).json({ error: "No tienes autorización para hacer esto" });
       return;
     }
@@ -92,7 +92,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const userIdToShow = req.params.id;
 
     // Only for admins and user to show
-    if (req.user.rol !== "ADMIN" && req.user.id !== userIdToShow) {
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "DELEGATE" && req.user.id !== userIdToShow) {
       res.status(401).json({ error: "No tienes autorización para hacer esto" });
       return;
     }
