@@ -46,8 +46,32 @@ export const getMatchdayById = async (req: Request, res: Response, next: NextFun
   }
 };
 
+export const getMatchdayByTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "DELEGATE" && req.user.rol !== "PLAYER") {
+      res.status(401).json({ error: "No tienes autorización para hacer esto" });
+      return;
+    }
+
+    const teamId = req.query.team as string;
+
+    const matchdays = await matchdayOdm.getMatchdayByTeam(teamId);
+
+    const response = {
+      totalItems: matchdays.length,
+      data: matchdays,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error al consultar la base de datos:", error);
+    next(error);
+  }
+};
 
 export const matchdayService = {
   getMatchdays,
   getMatchdayById,
+  getMatchdayByTeam,
 };

@@ -5,7 +5,9 @@ const getAllMatches = async (page: number, limit: number): Promise<IMatch[]> => 
   return await Match.find()
     .limit(limit)
     .skip((page - 1) * limit)
-    .populate(["homeTeam", "awayTeam"]);
+    .populate("homeTeam")
+    .populate("awayTeam")
+    .populate("matchday");
 };
 
 const getMatchCount = async (): Promise<number> => {
@@ -13,13 +15,19 @@ const getMatchCount = async (): Promise<number> => {
 };
 
 const getMatchById = async (id: string): Promise<Document<IMatch> | any> => {
-  return await Match.findById(id).populate(["homeTeam", "awayTeam"]);
+  return await Match.findById(id)
+  .populate("homeTeam")
+  .populate("awayTeam")
+  .populate("matchday");
 };
 
 const getMatchesByTeamId = async (teamId: string): Promise<IMatch[]> => {
   return await Match.find({
     $or: [{ homeTeam: teamId }, { awayTeam: teamId }]
-  }).populate("homeTeam").populate("awayTeam");
+  })    
+  .populate("homeTeam")
+  .populate("awayTeam")
+  .populate("matchday");
 };
 
 const updateMatch = async (id: string, matchData: IMatchCreate): Promise<Document<IMatch> | null> => {
