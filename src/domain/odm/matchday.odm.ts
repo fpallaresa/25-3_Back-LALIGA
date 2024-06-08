@@ -29,31 +29,7 @@ const getMatchdayById = async (id: string): Promise<Document<IMatchday> | any> =
   });
 };
 
-const getMatchdayByTeam = async (teamId: string): Promise<IMatchday[]> => {
-  const teamObjectId = new Types.ObjectId(teamId);
-
-  const matches = await Match.find({
-      $or: [{ homeTeam: teamObjectId }, { awayTeam: teamObjectId }]
-    });
-
-  const matchesId =  matches.map(match => match._id);
-
-  console.log(matchesId);
-
-  return await Matchday.find({
-    matches: {
-      $in: matchesId
-    }
-  }).populate({
-    path: "matches",
-    populate: {
-      path: "homeTeam awayTeam",
-      model: "Team",
-    },
-  });
-};
-
-/*const getMatchdayByTeam = async (teamId: string): Promise<IMatchday[]> => {
+const getMatchdayByTeam = async (): Promise<IMatchday[]> => {
 
   return await Matchday.find().populate({
     path: "matches",
@@ -62,7 +38,7 @@ const getMatchdayByTeam = async (teamId: string): Promise<IMatchday[]> => {
       model: "Team",
     },
   });
-};*/
+};
 
 export const matchdayOdm = {
   getAllMatchdays,

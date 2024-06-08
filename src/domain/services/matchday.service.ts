@@ -55,12 +55,21 @@ export const getMatchdayByTeam = async (req: Request, res: Response, next: NextF
     }
 
     const teamId = req.query.team as string;
-
-    const matchdays = await matchdayOdm.getMatchdayByTeam(teamId);
+    
+    const matchdays = await matchdayOdm.getMatchdayByTeam();
+    
+    const filteredMatchdays = matchdays.map(matchday => {
+      const filteredMatches = matchday.matches.filter(match => {
+        return match.homeTeam._id?.toString() === teamId || match.awayTeam._id?.toString() === teamId;
+      });
+      return {
+        ...matchday.toObject(),
+        matches: filteredMatches
+      };
+    });
 
     const response = {
-      totalItems: matchdays.length,
-      data: matchdays,
+      data: filteredMatchdays,
     };
 
     res.json(response);
